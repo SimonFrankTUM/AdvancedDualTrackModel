@@ -15,9 +15,9 @@ All files required to run simulations in MATLAB are contained in the "MATLAB" fo
 
 ### Start a simulation
 * Run "AdvancedDualTrackModel.m"
-* Select an input file containing control inputs for the simulated vehicle. 
-* Select a 3D road file or skip this step. Then a flat road is used instead. 
-* The results of the simulation are plotted automatically after it has finished. 
+* Select an input file containing control inputs for the simulated vehicle
+* Select a 3D road file or skip this step to use a flat road instead (recommended for general use). 
+* The results of the simulation are plotted automatically after it has finished
 * Use "s_saveCSV.m" to save the results from the MATLAB workspace to a ".csv" file
 
 ### Input files
@@ -37,4 +37,4 @@ Road files must be ".mat" files containing the following data (see "s_roadCreati
 * "x" (Vector of road X coordinates in 0.1m steps)
 * "y" (Vector of road Z coordinates in 0.1m steps)
 * "Z" (Matrix of road Z heights in 1m steps)
-* "Mu"(Matrix of normalized road mu in -)
+* "Mu" (Matrix of normalized road mu in -)
