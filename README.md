@@ -8,7 +8,7 @@ Tire and suspension behaviour can be simplified to linear models.
 ### People involved
 
 ##### Developer
-[Simon Frank](simon.sf.frank@tum.de)
+[Simon Frank](mailto:simon.sf.frank@tum.de)
 
 # Workflow
 All files required to run simulations in MATLAB are contained in the "MATLAB" folder. 
