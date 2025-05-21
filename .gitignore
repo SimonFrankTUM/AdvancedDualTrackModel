@@ -1,3 +1,7 @@
+# Temporary or Local Matlab Files
+*.asv
+*.slxc
+
 # Prerequisites
 *.d
 
