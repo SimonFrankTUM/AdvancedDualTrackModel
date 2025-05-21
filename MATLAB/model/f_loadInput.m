@@ -21,16 +21,16 @@ function [TTin,input,road,opts] = f_loadInput(opts)
 %% Input
 listing = dir('.\input');
 tbl = struct2table(listing);
-fileNames = tbl.name(~tbl.isdir,:);
+listNames = tbl.name(~tbl.isdir,:);
 userSelIdx = listdlg('Name','Select simulation input file (.csv)', ...
-    'SelectionMode','single', 'ListSize',[512 256],'ListString',fileNames);
+    'SelectionMode','single', 'ListSize',[512 256],'ListString',listNames);
 
 if isempty(userSelIdx)
     error('User selected Cancel.');
 end
 
 try
-    loadfile = fileNames{userSelIdx};
+    loadfile = listNames{userSelIdx};
     loadpathfile = ['.' filesep 'input' filesep loadfile];
     TTin        = readtable(loadpathfile);
     TTin.Time   = duration(TTin.Time,'InputFormat','mm:ss.SSS','Format','mm:ss.SSSSS');
@@ -44,19 +44,19 @@ disp(['Input file: ' loadfile]);
 %% Road
 listing = dir('.\roads');
 tbl = struct2table(listing);
-fileNames = tbl.name(~tbl.isdir,:);
+listNames = [{'none (flat road)'}; tbl.name(~tbl.isdir,:)];
 userSelIdx = listdlg('Name','Open road file (.mat)','CancelString','Skip', ...
-    'SelectionMode','single', 'ListSize',[512 256],'ListString',fileNames);
+    'SelectionMode','single', 'ListSize',[512 256],'ListString',listNames);
 
-if isempty(userSelIdx)
+if isempty(userSelIdx) || userSelIdx==1
     % Don't use 3D road
     road = struct.empty();
     opts.use3DRoad = false;
-    disp('Road file: none');
+    disp('Road file: none (flat road)');
 else
     % Use 3D road
     try
-        loadfile = fileNames{userSelIdx};
+        loadfile = listNames{userSelIdx};
         loadpathfile = ['.' filesep 'roads' filesep loadfile];
         road = load(loadpathfile);
     catch
