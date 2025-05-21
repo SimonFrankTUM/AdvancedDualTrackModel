@@ -36,5 +36,5 @@ Other signals such as "a_x" or "a_y" can be included for validation.
 Road files must be ".mat" files containing the following data (see "s_roadCreation.m"): 
 * "x" (Vector of road X coordinates in 0.1m steps)
 * "y" (Vector of road Z coordinates in 0.1m steps)
-* "Z" (Matrix of road Z heights in 1m steps)
+* "Z" (Matrix of road Z heights in m)
 * "Mu" (Matrix of normalized road mu in -)
