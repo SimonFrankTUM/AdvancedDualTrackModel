@@ -4,7 +4,7 @@
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
-% Info:                                     %
+% Info: Generic EV template                 %
 % ----------------------------------------- %
 
 %% Tire selection
@@ -18,7 +18,7 @@ massVehicle = 2350; % Whole car weight in kg
 Wheelbase   = 2.77; % Distance between axles in m
 trackFA     = 1.54; % Distance between front wheel center points in m
 trackRA     = 1.51; % Distance between rear wheel center points in m
-ratioMassFA = 0.53; % Ratio of mass on front axle in -
+ratioMassFA = 0.55; % Ratio of mass on front axle in -
 heightCoG   = 0.20; % CoG height above wheel center plane in m
 
 IChassisXX  = 1500;  % Chassis inertia around X-axis in kg*m^2
@@ -35,10 +35,10 @@ cSpringHeaveRA  = 0; % Rear heave spring rate (reduced by motion ratio^2) in N/m
 cSpringRollFA   = 30E3/1.10^2; % Front roll spring or ARB rate (reduced by motion ratio^2) in N/m
 cSpringRollRA   = 15E3/1.10^2; % Rear roll spring or ARB rate (reduced by motion ratio^2) in N/m
 
-vDamperFA       = [-0.2 -0.05 0 0.05 0.2].*1.1; % Front damper forces (increased by motion ratio) LUT in m/s
-FDamperFA       = [-900 -400 0 400 900]./1.1;     % Front damper forces (reduced by motion ratio) LUT in N
-vDamperRA       = [-0.2 -0.05 0 0.05 0.2].*1.1; % Rear damper forces (increased by motion ratio) LUT in m/s
-FDamperRA       = [-900 -400 0 400 900]./1.1;     % Rear damper forces (reduced by motion ratio) LUT in N
+vDamperFA       = [-0.2 -0.05 0 0.05 0.2].*1.10;% Front damper forces (increased by motion ratio) LUT in m/s
+FDamperFA       = [-900 -400 0 400 900]./1.10;  % Front damper forces (reduced by motion ratio) LUT in N
+vDamperRA       = [-0.2 -0.05 0 0.05 0.2].*1.10;% Rear damper forces (increased by motion ratio) LUT in m/s
+FDamperRA       = [-900 -400 0 400 900]./1.10;  % Rear damper forces (reduced by motion ratio) LUT in N
 
 vDamperHeaveFA  = 0; % Front heave damper forces (increased by motion ratio) LUT in m/s
 FDamperHeaveFA  = 0; % Front heave damper forces (reduced by motion ratio) LUT in N
@@ -53,8 +53,8 @@ FDamperRollRA   = 0; % Rear roll damper forces (reduced by motion ratio) LUT in 
 %% Aerodynamics
 projectArea =  2.36;    % Frontal area in m^2
 dragCoef    = -0.267;   % Drag coefficient (must be negative) in -
-liftCoefFA  =  0.0;     % Front axle lift coefficient (negative for downforce) in -
-liftCoefRA  =  0.0;     % Rear axle lift coefficient (negative for downforce) in -
+liftCoefFA  =  0.02;    % Front axle lift coefficient (negative for downforce) in -
+liftCoefRA  =  0.01;    % Rear axle lift coefficient (negative for downforce) in -
 
 %% Brakes
 APstBFA     = 0.008;    % Brake piston area per front wheel in m^2

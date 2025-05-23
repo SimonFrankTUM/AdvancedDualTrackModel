@@ -4,7 +4,7 @@
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
-% Info:                                     %
+% Info: Generic FS template                 %
 % ----------------------------------------- %
 
 %% Tire selection

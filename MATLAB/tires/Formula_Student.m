@@ -4,21 +4,22 @@
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
+% Info: Generic FS tire                     %
 % ----------------------------------------- %
 
 % General
-tir.r_0 = 0.205;    % m
-tir.b_0 = 0.1905;   % m
-tir.c_x = 150E3;    % N/m
-tir.c_y = 85E3;     % N/m
-tir.c_z = 105E3;    % N/m
-tir.c_psi = 400;    % Nm/rad
-tir.d_x = 400;      % N*s/m
-tir.d_y = 300;      % N*s/m
-tir.d_z = 150;      % N*s/m
-tir.d_psi = 1;      % Nm*s/rad
-tir.a_r = 0.02;     % N/N
-tir.dr_s= 1E-7;     % Tire radius increase over omega^2 in m/(rad/s)^2
+tir.r_0 = 0.205;    % Unloaded tire radius in m
+tir.b_0 = 0.1905;   % Tire tread width in m
+tir.c_x = 150E3;    % Longitudinal stiffness in N/m
+tir.c_y = 85E3;     % Lateral stiffness in N/m
+tir.c_z = 105E3;    % Vertical stiffness in N/m
+tir.c_psi = 400;    % Torsional stiffness in Nm/rad
+tir.d_x = 400;      % Longitudinal damping in N*s/m
+tir.d_y = 300;      % Lateral damping in N*s/m
+tir.d_z = 150;      % Vertical damping in N*s/m
+tir.d_psi = 1;      % Torsional damping in Nm*s/rad
+tir.a_r = 0.02;     % Rolling resistance coefficient in N/N
+tir.dr_s= 1E-7;     % Tire radius increase with omega^2 in m/(rad/s)^2
 
 % Tire model properties
 tir.F_zN  = 575;    % Nominal normal force in N
