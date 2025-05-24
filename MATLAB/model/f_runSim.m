@@ -13,7 +13,7 @@ function [TTin,TTout,road,opts] = f_runSim(opts)
 %   TTin    -   timetable of input signals  %
 %   TTout   -   timetable of output signals %
 %   road    -   struct of road              %
-%               x, y, and Z data            %
+%               x, y, Z, and Mu data        %
 %   opts    -   struct of additional model  %
 %               options                     %
 % ----------------------------------------- %

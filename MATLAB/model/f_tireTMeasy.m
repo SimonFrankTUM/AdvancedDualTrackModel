@@ -209,7 +209,7 @@ if dynamic
     F_y = tir.c_y*y_e + tir.d_y*y_e_dot;
     F_yStar = F_y - F_yc;
 else
-    % Static tire forces in x and y
+    % Steady state tire forces in x and y
     F_x     = f_G*s_xN;
     F_yStar = f_G*s_yN;
     F_y     = F_yStar + F_yc;
@@ -258,10 +258,10 @@ if dynamic
     % Dynamic bore torque
     T_B = tir.c_psi*psi_e + tir.d_psi*psi_e_dot;
 else
-    % Static aligning torque
+    % Steady state aligning torque
     T_S = -nu*L*F_yStar;
 
-    % Static bore torque
+    % Steady state bore torque
     T_B = f_G*R_B*s_b*tir.eta_b;
 end
 

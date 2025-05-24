@@ -7,7 +7,7 @@ function [v_0QQ,A_0Q,gamma,r_st,dz,w,r_MQ0,mu_R] = f_roadContact(road,tir,r_0M0,
 % Modified by:                              %
 % Input:                                    %
 %   road    -   struct of road              %
-%               x, y, and Z data            %
+%               x, y, Z, and Mu data        %
 %   tir     -   struct containing tire      %
 %               parameters for one tire     %
 %   r_0M0   -   distance vector from origin %
@@ -50,9 +50,7 @@ e_zStar = cross(e_xStar,e_yR0); % Kind of up
 
 r_0PStar = r_0M0 - (tir.r_0-b2)*e_zStar - b2*e_n00; % Wheel center -> contact point guess P*
 
-if opts.use3DRoad
-    % 3D road
-
+if opts.use3DRoad % 3D road
     % Put P* on road surface
     r_0PStar(3) = f_roadHeight(road, r_0PStar(1), r_0PStar(2));
 
@@ -88,9 +86,7 @@ if opts.use3DRoad
     r_0R0 = 0.25*(r_0R1 + r_0R2 + r_0R3 + r_0R4);
     r_MR0 = r_0R0 - r_0M0;
 
-else
-    % Flat road
-    
+else % Flat road
     % Road normal on flat road
     e_n = e_n00;
 
@@ -100,7 +96,7 @@ else
 
 end
 
-% Direction vectors
+% Unit vectors of Q frame
 e_xQ = cross(e_yR0,e_n);    % Forward on road surface
 e_xQ = e_xQ/sqrt(e_xQ(1)^2 + e_xQ(2)^2 + e_xQ(3)^2); % Adjust length to 1
 e_yQ = cross(e_n,e_xQ);     % Left on road surface
@@ -177,7 +173,7 @@ if dz == 0
 end
 
 %% Local friction coefficient
-if opts.use3DRoad
+if opts.use3DRoad % Mu from road file
     mu_R = f_roadMu(road,r_0Q0(1),r_0Q0(2));
 else
     mu_R = 1.0;

@@ -18,7 +18,7 @@ function [TTout,opts] = f_solveODE(input,veh,tirFL,tirFR,tirRL,tirRR,env,road,op
 %   env     -   struct containing           %
 %               environment parameters      %
 %   road    -   struct of road              %
-%               x, y, and Z data            %
+%               x, y, Z, and Mu data        %
 %   opts    -   struct of additional model  %
 %               options                     %
 % Output:                                   %

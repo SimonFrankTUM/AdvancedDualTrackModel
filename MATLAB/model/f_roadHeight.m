@@ -8,7 +8,7 @@ function z = f_roadHeight(road,x_0R,y_0R,t)
 % Info: Z is in m while x/y are in 0.1m!    %
 % Input:                                    %
 %   road    -   struct of road              %
-%               x, y, and Z data            %
+%               x, y, Z, and Mu data        %
 %   x_0R    -   x coordinate on road        %
 %   y_0R    -   y coordinate on road        %
 %   t       -   current simulation time     %

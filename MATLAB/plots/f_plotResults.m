@@ -9,7 +9,7 @@ function f_plotResults(TTin, TTout, road, opts)
 %   TTin    -   timetable of input signals  %
 %   TTout   -   timetable of output signals %
 %   road    -   struct of road              %
-%               x, y, and Z data            %
+%               x, y, Z, and Mu data        %
 %   opts    -   struct of additional model  %
 %               options                     %
 % Output:                                   %

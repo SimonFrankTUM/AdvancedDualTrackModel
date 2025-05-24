@@ -17,9 +17,13 @@ function [x_dot, out] = f_vehicleModel(inputs, t, x, veh, tirFL, tirFR, tirRL, t
 %               where XX is FL/FR/RL/RR     %
 %   env     -   struct containing           %
 %               environment parameters      %
-%   tireModel - name of chosen tire model   %
+%   road    -   struct of road              %
+%               x, y, Z, and Mu data        %
+%   opts    -   struct of additional model  %
+%               options                     %
 % Output:                                   %
 %   x_dot   -   state derivative vector     %
+%   out     -   model output vector         %
 % ----------------------------------------- %
 
 %% Model states
@@ -189,7 +193,7 @@ r_VFRV_dot = dvdphi_FR*phi_FR_dot;
 r_VRLV_dot = dvdphi_RL*phi_RL_dot;
 r_VRRV_dot = dvdphi_RR*phi_RR_dot;
 
-% Wheel center absolute velocity vehicle frame
+% Wheel center total velocity vehicle frame
 v_0FLV = v_0VV + cross(omega_0VV,r_VFLV) + r_VFLV_dot;
 v_0FRV = v_0VV + cross(omega_0VV,r_VFRV) + r_VFRV_dot;
 v_0RLV = v_0VV + cross(omega_0VV,r_VRLV) + r_VRLV_dot;
@@ -207,7 +211,7 @@ omega_VUFRV = domdphi_FR*phi_FR_dot;
 omega_VURLV = domdphi_RL*phi_RL_dot;
 omega_VURRV = domdphi_RR*phi_RR_dot;
 
-% Upright absolute angular velocity vehicle frame
+% Upright total angular velocity vehicle frame
 omega_0UFLV = omega_0VV + omega_VUFLV;
 omega_0UFRV = omega_0VV + omega_VUFRV;
 omega_0URLV = omega_0VV + omega_VURLV;
@@ -310,7 +314,7 @@ F_HvSRA = 0.5*(z_RL+z_RR)*veh.c_HeaveRA + f_LUT1D(veh.v_DHeaveRA,veh.F_DHeaveRA,
 F_RoSFA = (z_FL-z_FR)*veh.c_RollFA + f_LUT1D(veh.v_DRollFA,veh.F_DRollFA,z_FL_dot-z_FR_dot,true);
 F_RoSRA = (z_RL-z_RR)*veh.c_RollRA + f_LUT1D(veh.v_DRollRA,veh.F_DRollRA,z_RL_dot-z_RR_dot,true);
 
-% Pretension + spring/damper forces
+% Pretension + spring & damper forces
 F_SFL = veh.F_SFL0 + F_CrSFL + F_RoSFA + 0.5*F_HvSFA;
 F_SFR = veh.F_SFR0 + F_CrSFR - F_RoSFA + 0.5*F_HvSFA;
 F_SRL = veh.F_SRL0 + F_CrSRL + F_RoSRA + 0.5*F_HvSRA;
@@ -318,14 +322,14 @@ F_SRR = veh.F_SRR0 + F_CrSRR - F_RoSRA + 0.5*F_HvSRA;
 
 %% Aerodynamic Forces
 F_DAFA = 0.5*env.rho_Air*veh.C_D*0.5*veh.A_A*v_FA*v_0FAV;  % Drag front
-F_DARA = 0.5*env.rho_Air*veh.C_D*0.5*veh.A_A*v_RA*v_0RAV;  % Drag front
+F_DARA = 0.5*env.rho_Air*veh.C_D*0.5*veh.A_A*v_RA*v_0RAV;  % Drag rear
 F_LAFA = 0.5*env.rho_Air*veh.C_LFA*veh.A_A*e_z*v_0FAV(1)^2; % Lift front
 F_LARA = 0.5*env.rho_Air*veh.C_LRA*veh.A_A*e_z*v_0RAV(1)^2; % Lift rear
 F_AFAV = F_DAFA + F_LAFA; % Aero. force front
 F_ARAV = F_DARA + F_LARA; % Aero. force rear
 
 %% Applied forces & torques
-% Friction damping
+% Wheel rot. friction damping coef.
 d_NFA = tirFL.r_0*sqrt(tirFL.c_x*veh.I_WFL(2,2));
 d_NRA = tirRL.r_0*sqrt(tirRL.c_x*veh.I_WRL(2,2));
 
@@ -339,7 +343,9 @@ switch veh.Drive
             case 1 % Combustion
                 i_G = f_LUT1D(veh.n_G,veh.i_G,gear,false);
                 omega_M = 0.5*(omega_RL+omega_RR)*veh.i_F*i_G;
-                if omega_M<veh.omega_Mmin; omega_M = veh.omega_Mmin; end
+                if omega_M<veh.omega_Mmin
+                    omega_M = veh.omega_Mmin;
+                end
 
                 facOmegaMLim = f_limitAbs(0.1*(veh.omega_Mmax-omega_M),1);
                 T_MMax  = (env.rho_Air/1.2041) * f_LUT1D(veh.omega_M,veh.T_M,omega_M,false);
@@ -506,7 +512,7 @@ q = f ...
     + domWRRdz' * ( - I_WRRV*( cross(omega_0VV,omega_0WRRV) + cross(omega_VURRV,e_yRRV*omega_RR) ) - cross(omega_0WRRV,I_WRRV*omega_0WRRV) );    % Wheel torque RR
 
 %% Generalized mass matrix
-M = (dvVdz'*veh.m_C*dvVdz + domVdz'*veh.I_C*domVdz) ... % Chassis
+M =   (dvVdz'*veh.m_C*dvVdz + domVdz'*veh.I_C*domVdz) ... % Chassis
     + (dvFLdz'*veh.m_FL*dvFLdz + domUFLdz'*I_UFLV*domUFLdz + domWFLdz'*I_WFLV*domWFLdz) ... % FL
     + (dvFRdz'*veh.m_FR*dvFRdz + domUFRdz'*I_UFRV*domUFRdz + domWFRdz'*I_WFRV*domWFRdz) ... % FR
     + (dvRLdz'*veh.m_RL*dvRLdz + domURLdz'*I_URLV*domURLdz + domWRLdz'*I_WRLV*domWRLdz) ... % RL
@@ -518,10 +524,10 @@ z_dot = M \ q; % Generalized velocities derivatives
 x_dot = [y_dot; z_dot; x_T_dot]; % State derivatives
 
 %% Additional output
-% Acceleration sensor
+% Inertial acceleration
 a_Inertial = M(1:3,1:3) \ f(1:3);
 
-% Aerodynamic forces
+% Combined aerodynamic forces
 F_A = F_AFAV + F_ARAV;
 
 % Steering Torque

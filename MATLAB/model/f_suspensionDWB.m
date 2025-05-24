@@ -67,7 +67,7 @@ A_alpha = f_xrot(alpha);
 beta   = solveForAngle(r_CFk(1),r_CFk(3),r_CFV(1));
 A_beta = f_yrot(beta);
 
-% Steering angle delta
+% Steering angle delta around kingpin axis
 r_VRV = sus.r_VRk + [0; u; 0];
 r_RCV = r_VCV - r_VRV;
 r_RCH_transp = r_RCV'*A_alpha*A_beta;
@@ -119,7 +119,7 @@ dvdu    = cross(domdu,r_CWV);
 
 %% Additional functions
     function ang = solveForAngle(a,b,c)
-        % solve a*cos(ang) + b*sin(ang) = c for angle ang
+        % Solve "a*cos(ang) + b*sin(ang) = c" for angle ang
         if b < 0
             ang = asin(-c/sqrt(a^2+b^2)) - atan2(-a,-b);
         else
