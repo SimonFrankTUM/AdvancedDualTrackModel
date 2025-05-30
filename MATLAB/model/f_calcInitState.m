@@ -26,7 +26,7 @@ function [x_V0,y_V0,z_V0,phi_0,theta_0,phi_FL0,phi_FR0,phi_RL0,phi_RR0] = f_calc
 %   phi_XX0 -   value of phi_XX at t=0      %
 % ----------------------------------------- %
 
-%% Roll angle phi & pitch angle theta @ t=0
+%% Initial states @ t=0
 m_FA = veh.m*veh.l_RA/veh.wb;
 m_RA = veh.m - m_FA;
 
@@ -47,9 +47,15 @@ end
 F_zAFA = 0.5*env.rho_Air*veh.C_LFA*veh.A_A*opts.x_0(15)^2; % Lift front
 F_zARA = 0.5*env.rho_Air*veh.C_LRA*veh.A_A*opts.x_0(15)^2; % Lift rear
 
-% Wheel travel from lift
-z_SFA = F_zAFA/(2*veh.c_FA);
-z_SRA = F_zARA/(2*veh.c_RA);
+% Wheel travel from aerodynamic lift
+z_AFA = F_zAFA/(2*veh.c_FA);
+z_ARA = F_zARA/(2*veh.c_RA);
+
+% Approx. initial wishbone angles from aerodynamic lift
+phi_FL0 = asin(-z_AFA/( 0.5*veh.t_FA));
+phi_FR0 = asin(-z_AFA/(-0.5*veh.t_FA));
+phi_RL0 = asin(-z_ARA/( 0.5*veh.t_RA));
+phi_RR0 = asin(-z_ARA/(-0.5*veh.t_RA));
 
 % Force on each axle center
 F_zFA = F_zAFA - env.g*m_FA;
@@ -61,14 +67,13 @@ z_FR = 0.99*tirFR.r_0 + 0.5*F_zFA/tirFR.c_z + z_RFR;
 z_RL = 0.99*tirRL.r_0 + 0.5*F_zRA/tirRL.c_z + z_RRL;
 z_RR = 0.99*tirRR.r_0 + 0.5*F_zRA/tirRR.c_z + z_RRR;
 
-%% Initial states
 % Chassis angles
 phi_0    = ( asin((z_FL-z_FR)/veh.t_FA) + asin((z_RL-z_RR)/veh.t_RA) )/2;
 theta_0  = ( asin((z_RL-z_FL)/veh.wb)   + asin((z_RR-z_FR)/veh.wb) )/2 + ...
-             asin((z_SRA-z_SFA)/veh.wb);
+             asin((z_ARA-z_AFA)/veh.wb);
 
 A_0V = f_yrot(theta_0) * f_xrot(phi_0);
-z_VV = [0; 0; veh.z_cg + (z_SFA+z_SRA)/2 ...
+z_VV = [0; 0; veh.z_cg + (z_AFA+z_ARA)/2 ...
     + 0.25*(z_FL+z_FR+z_RL+z_RR) - 0.25*(z_RFL+z_RFR+z_RRL+z_RRR)];
 pos_0 = A_0V*z_VV + [0; 0; 0.25*(z_RFL+z_RFR+z_RRL+z_RRR)];
 
@@ -76,11 +81,5 @@ pos_0 = A_0V*z_VV + [0; 0; 0.25*(z_RFL+z_RFR+z_RRL+z_RRR)];
 x_V0 = pos_0(1);
 y_V0 = pos_0(2);
 z_V0 = pos_0(3);
-
-% Approx. initial wishbone angles
-phi_FL0 = asin(-z_SFA/( 0.5*veh.t_FA));
-phi_FR0 = asin(-z_SFA/(-0.5*veh.t_FA));
-phi_RL0 = asin(-z_SRA/( 0.5*veh.t_RA));
-phi_RR0 = asin(-z_SRA/(-0.5*veh.t_RA));
 
 end
