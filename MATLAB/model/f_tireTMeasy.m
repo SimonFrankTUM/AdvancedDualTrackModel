@@ -1,7 +1,7 @@
 function [F_T,T_T,s,x_T_dot,r_dyn,F_yc,dF_x0,F_xM,dF_y0,F_yM] = f_tireTMeasy(tir,t,v_0QQ,omega_0WW,r_st,dz,w,gamma,mu_n,x_T,dynamic)
 %%          TMeasy Tire Model              %%
 % ----------------------------------------- %
-% Version: V2.4 - 2024.12.26                %
+% Version: V2.5 - 2025.06.09                %
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
@@ -64,12 +64,15 @@ if F_z*mu_n <= 0
     F_T = zeros(3,1);
     T_T = zeros(3,1);
     s   = zeros(4,1);
-    x_T_dot = zeros(3,1);
     F_yc  = 0;
     dF_x0 = 0;
     F_xM  = 0;
     dF_y0 = 0;
     F_yM  = 0;
+    x_e_dot     = (-tir.c_x*x_e)/(tir.d_x + tir.v_n);
+    y_e_dot     = (-tir.c_y*y_e)/(tir.d_y + tir.v_n);
+    psi_e_dot   = (-tir.c_psi*psi_e)/(tir.d_psi + tir.v_n);
+    x_T_dot     = [x_e_dot; y_e_dot; psi_e_dot];
     return
 elseif F_z > tir.F_zMax
     F_z = tir.F_zMax;
@@ -100,10 +103,12 @@ end
 
 % Fix extrapolation errors
 if F_xS > F_xM
+    s_xS = s_xM;
     F_xS = F_xM;
 end
 if s_xS < s_xM
     s_xS = s_xM;
+    F_xS = F_xM;
 end
 
 dF_y0 = forceParInterp(tir.dF_y01,tir.dF_y02,tir.F_zN,F_z);
@@ -114,10 +119,12 @@ F_yS  = forceParInterp(tir.F_yS1,tir.F_yS2,tir.F_zN,F_z) *mu_n;
 
 % Fix extrapolation errors
 if F_yS > F_yM
+    s_yS = s_yM;
     F_yS = F_yM;
 end
 if s_yS < s_yM
     s_yS = s_yM;
+    F_yS = F_yM;
 end
 
 %% Normalized slip
@@ -176,7 +183,7 @@ else
             if s_G < s_star
                 F = F_M - a*(s_G-s_M)^2;
 
-                % Case: s_star <= s <= s_S
+            % Case: s_star <= s <= s_S
             else
                 b = a*(s_star-s_M)/(s_S-s_star);
                 F = F_S + b*(s_S-s_G)^2;
@@ -247,10 +254,10 @@ else
     nu = 0;
 end
 
-if dynamic
-    % Dynamic aligning torque
-    T_S = -nu*L*F_yStar;
+% Self-aligning torque
+T_S = -nu*L*F_yStar;
 
+if dynamic
     % Torsional deflection derivative
     psi_e_dot = (-v_TStar*tir.c_psi*psi_e - R_B^2*f_G*omega_n) ...
         / (v_TStar*tir.d_psi + R_B^2*f_G);
@@ -258,9 +265,6 @@ if dynamic
     % Dynamic bore torque
     T_B = tir.c_psi*psi_e + tir.d_psi*psi_e_dot;
 else
-    % Steady state aligning torque
-    T_S = -nu*L*F_yStar;
-
     % Steady state bore torque
     T_B = f_G*R_B*s_b*tir.eta_b;
 end

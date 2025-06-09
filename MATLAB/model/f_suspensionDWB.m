@@ -5,7 +5,15 @@ function [A_VW,r_VWV,delta,dvdphi,domdphi,dvdu,domdu] = f_suspensionDWB(sus,phi,
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
-% Info:                                     %
+% Info: Suspension points:                  %
+%       A: lower arm @ chassis rear         %
+%       B: lower arm @ chassis front        %
+%       C: lower arm @ upright              %
+%       D: upper arm @ chassis rear         %
+%       E: upper arm @ chassis front        %
+%       F: upper arm @ upright              %
+%       R: tie rod @ steering rack          %
+%       Q: tie rod @ upright                %
 % Input:                                    %
 %   phi     -   rotation angle of lower     %
 %               wishbone                    %
@@ -31,14 +39,14 @@ if phi > sus.phi_max
 end
 
 %% Upright position and orientation
-% Rotation of lower wishbone
+% Rotation of lower wishbone with angle phi
 r_ABV = sus.r_VBk - sus.r_VAk;
 e_ABV = r_ABV/norm(r_ABV);
 e_ABV_tilde = f_crossprod(e_ABV);
 e_ABV2 = e_ABV*e_ABV';
 A_phi  = e_ABV2 + (eye(3,3)-e_ABV2)*cos(phi) + e_ABV_tilde*sin(phi);
 
-% Rotation of upper wishbone
+% Rotation of upper wishbone with angle psi
 r_CFk = sus.r_VFk - sus.r_VCk;
 r_DFk = sus.r_VFk - sus.r_VDk;
 r_ACV = A_phi*(sus.r_VCk-sus.r_VAk);
