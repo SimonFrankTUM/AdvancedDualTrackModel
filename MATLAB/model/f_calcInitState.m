@@ -1,7 +1,7 @@
 function [x_V0,y_V0,z_V0,phi_0,theta_0,phi_FL0,phi_FR0,phi_RL0,phi_RR0] = f_calcInitState(veh,tirFL,tirFR,tirRL,tirRR,env,road,opts)
 %%      Calculation of initial states      %%
 % ----------------------------------------- %
-% Version: V1.4 - 2024.05.20                %
+% Version: V1.5 - 2025.06.25                %
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
@@ -27,6 +27,7 @@ function [x_V0,y_V0,z_V0,phi_0,theta_0,phi_FL0,phi_FR0,phi_RL0,phi_RR0] = f_calc
 % ----------------------------------------- %
 
 %% Initial states @ t=0
+% Mass on each axle
 m_FA = veh.m*veh.l_RA/veh.wb;
 m_RA = veh.m - m_FA;
 
@@ -62,10 +63,10 @@ F_zFA = F_zAFA - env.g*m_FA;
 F_zRA = F_zARA - env.g*m_RA;
 
 % Wheel center heights
-z_FL = 0.99*tirFL.r_0 + 0.5*F_zFA/tirFL.c_z + z_RFL;
-z_FR = 0.99*tirFR.r_0 + 0.5*F_zFA/tirFR.c_z + z_RFR;
-z_RL = 0.99*tirRL.r_0 + 0.5*F_zRA/tirRL.c_z + z_RRL;
-z_RR = 0.99*tirRR.r_0 + 0.5*F_zRA/tirRR.c_z + z_RRR;
+z_FL = tirFL.r_0 + 0.5*F_zFA/tirFL.c_z + z_RFL;
+z_FR = tirFR.r_0 + 0.5*F_zFA/tirFR.c_z + z_RFR;
+z_RL = tirRL.r_0 + 0.5*F_zRA/tirRL.c_z + z_RRL;
+z_RR = tirRR.r_0 + 0.5*F_zRA/tirRR.c_z + z_RRR;
 
 % Chassis angles
 phi_0    = ( asin((z_FL-z_FR)/veh.t_FA) + asin((z_RL-z_RR)/veh.t_RA) )/2;

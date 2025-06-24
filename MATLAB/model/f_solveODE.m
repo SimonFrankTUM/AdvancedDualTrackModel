@@ -54,24 +54,33 @@ wb = waitbar(0,wbmsg,'Name','Simulation Progress'); wb.Pointer = 'watch'; waitba
 
 % Use selected solver
 switch opts.solver
-    
+
     case 'Euler'
         for step = 1:nData
             xData(step,:)   = x';
             output(step,:)  = out';
 
-            if step < nData
-                for subStep = 1:nSubSteps
-                    [x_dot,out] = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    t = t + tStep;
-                    x = x + tStep.*x_dot;
+            try
+                if step < nData
+                    for subStep = 1:nSubSteps
+                        [x_dot,out] = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        t = t + tStep;
+                        x = x + tStep.*x_dot;
+                    end
                 end
-            end
 
-            uistep = step*2E-2;
-            if uistep == round(uistep)
-                try waitbar(step/nData,wb); catch; disp(['Simulation stopped after ' num2str(t) 's.']); break; end
+                uistep = step*2E-2;
+                if uistep == floor(uistep)
+                    waitbar(step/nData,wb);
+                end
+                
+            catch ME
+                if ~strncmp(ME.message,'The second argument',19)
+                    warning(ME.message); % Not waitbar related errors
+                end
+                disp(['Simulation stopped after ' num2str(t) 's.']);
+                break
             end
         end
         close hidden all; % Close waitbar
@@ -81,21 +90,30 @@ switch opts.solver
             xData(step,:)   = x';
             output(step,:)  = out';
 
-            if step < nData
-                for subStep = 1:nSubSteps
-                    [x_dot_current,out] = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    t = t + tStep;
-                    [x_dot_next,~]      = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x+tStep.*x_dot_current,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    x_dot = 0.5.*(x_dot_current+x_dot_next);
-                    x = x + tStep.*x_dot;
+            try
+                if step < nData
+                    for subStep = 1:nSubSteps
+                        [x_dot_current,out] = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        t = t + tStep;
+                        [x_dot_next,~]      = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x+tStep.*x_dot_current,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        x_dot = 0.5.*(x_dot_current+x_dot_next);
+                        x = x + tStep.*x_dot;
+                    end
                 end
-            end
-            
-            uistep = step*2E-2;
-            if uistep == round(uistep)
-                try waitbar(step/nData,wb); catch; disp(['Simulation stopped after ' num2str(t) 's.']); break; end
+
+                uistep = step*2E-2;
+                if uistep == floor(uistep)
+                    waitbar(step/nData,wb);
+                end
+
+            catch ME
+                if ~strncmp(ME.message,'The second argument',19)
+                    warning(ME.message); % Not waitbar related errors
+                end
+                disp(['Simulation stopped after ' num2str(t) 's.']);
+                break
             end
         end
         close hidden all; % Close waitbar
@@ -105,26 +123,35 @@ switch opts.solver
             xData(step,:)   = x';
             output(step,:)  = out';
 
-            if step < nData
-                for subStep = 1:nSubSteps
-                    [k1,out]= f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    t = t+0.5*tStep;
-                    [k2,~]  = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x+0.5.*tStep.*k1,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    [k3,~]  = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x+0.5.*tStep.*k2,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    t = t+0.5*tStep;
-                    [k4,~]  = f_vehicleModel( ...
-                        input((step-1)*nSubSteps+subStep),t,x+tStep.*k3,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
-                    x_dot   = (k1 + 2.*k2 + 2.*k3 + k4)./6;
-                    x = x + tStep.*x_dot;
+            try
+                if step < nData
+                    for subStep = 1:nSubSteps
+                        [k1,out]= f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        t = t+0.5*tStep;
+                        [k2,~]  = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x+0.5.*tStep.*k1,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        [k3,~]  = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x+0.5.*tStep.*k2,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        t = t+0.5*tStep;
+                        [k4,~]  = f_vehicleModel( ...
+                            input((step-1)*nSubSteps+subStep),t,x+tStep.*k3,veh,tirFL,tirFR,tirRL,tirRR,env,road,opts);
+                        x_dot   = (k1 + 2.*k2 + 2.*k3 + k4)./6;
+                        x = x + tStep.*x_dot;
+                    end
                 end
-            end
-            
-            uistep = step*2E-2;
-            if uistep == round(uistep)
-                try waitbar(step/nData,wb); catch; disp(['Simulation stopped after ' num2str(t) 's.']); break; end
+
+                uistep = step*2E-2;
+                if uistep == floor(uistep)
+                    waitbar(step/nData,wb);
+                end
+
+            catch ME
+                if ~strncmp(ME.message,'The second argument',19)
+                    warning(ME.message); % Not waitbar related errors
+                end
+                disp(['Simulation stopped after ' num2str(t) 's.']);
+                break
             end
         end
         close hidden all; % Close waitbar

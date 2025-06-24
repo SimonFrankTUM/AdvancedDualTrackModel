@@ -1,7 +1,7 @@
 function [v_0QQ,A_0Q,gamma,r_st,dz,w,r_MQ0,mu_R] = f_roadContact(road,tir,r_0M0,v_0M0,omega_0U0,e_yR0,opts,t)
 %%          Road Contact Model             %%
 % ----------------------------------------- %
-% Version: V1.6 - 2024.06.21                %
+% Version: V1.7 - 2025.06.25                %
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
@@ -52,7 +52,7 @@ r_0PStar = r_0M0 - (tir.r_0-b2)*e_zStar - b2*e_n00; % Wheel center -> contact po
 
 if opts.use3DRoad % 3D road
     % Put P* on road surface
-    r_0PStar(3) = f_roadHeight(road, r_0PStar(1), r_0PStar(2));
+    r_0PStar(3) = f_roadHeight(road, r_0PStar(1), r_0PStar(2),t);
 
     % Sample offsets
     dx = 0.1*tir.r_0;
