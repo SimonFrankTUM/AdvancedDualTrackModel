@@ -1,7 +1,7 @@
 function [TTin,input,road,opts] = f_loadInput(opts)
 %%              Load Input                 %%
 % ----------------------------------------- %
-% Version: V1.3 - 2025.05.21                %
+% Version: V1.4 - 2025.07.18                %
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
@@ -20,6 +20,11 @@ function [TTin,input,road,opts] = f_loadInput(opts)
 
 %% Input
 listing = dir('.\input');
+
+if isempty(listing)
+    error('No input files found.');
+end
+
 tbl = struct2table(listing);
 listNames = tbl.name(~tbl.isdir,:);
 userSelIdx = listdlg('Name','Select simulation input file (.csv)', ...

@@ -35,19 +35,19 @@ cSpringHeaveRA  = 0; % Rear heave spring rate (reduced by motion ratio^2) in N/m
 cSpringRollFA   = 0; % Front roll spring/ARB rate (reduced by motion ratio^2) in N/m
 cSpringRollRA   = 0; % Rear roll spring/ARB rate (reduced by motion ratio^2) in N/m
 
-vDamperFA       = [-0.1 -0.05 0 0.05 0.1].*1.08;% Front damper forces (increased by motion ratio) LUT in m/s
+vDamperFA       = [-0.1 -0.05 0 0.05 0.1].*1.08;% Front damper speeds (increased by motion ratio) LUT in m/s
 FDamperFA       = [-300 -200 0 200 300]./1.08;  % Front damper forces (reduced by motion ratio) LUT in N
-vDamperRA       = [-0.1 -0.05 0 0.05 0.1].*1.00;% Rear damper forces (increased by motion ratio) LUT in m/s
+vDamperRA       = [-0.1 -0.05 0 0.05 0.1].*1.00;% Rear damper speeds (increased by motion ratio) LUT in m/s
 FDamperRA       = [-300 -200 0 200 300]./1.00;  % Rear damper forces (reduced by motion ratio) LUT in N
 
-vDamperHeaveFA  = 0; % Front heave damper forces (increased by motion ratio) LUT in m/s
+vDamperHeaveFA  = 0; % Front heave damper speeds (increased by motion ratio) LUT in m/s
 FDamperHeaveFA  = 0; % Front heave damper forces (reduced by motion ratio) LUT in N
-vDamperHeaveRA  = 0; % Rear heave damper forces (increased by motion ratio) LUT in m/s
+vDamperHeaveRA  = 0; % Rear heave damper speeds (increased by motion ratio) LUT in m/s
 FDamperHeaveRA  = 0; % Rear heave damper forces (reduced by motion ratio) LUT in N
 
-vDamperRollFA   = 0; % Front roll damper forces (increased by motion ratio) LUT in m/s
+vDamperRollFA   = 0; % Front roll damper speeds (increased by motion ratio) LUT in m/s
 FDamperRollFA   = 0; % Front roll damper forces (reduced by motion ratio) LUT in N
-vDamperRollRA   = 0; % Rear roll damper forces (increased by motion ratio) LUT in m/s
+vDamperRollRA   = 0; % Rear roll damper speeds (increased by motion ratio) LUT in m/s
 FDamperRollRA   = 0; % Rear roll damper forces (reduced by motion ratio) LUT in N
 
 %% Aerodynamics

@@ -1,7 +1,7 @@
 function veh = f_vehicleParameters()
 %%          Vehicle Parameters             %%
 % ----------------------------------------- %
-% Version: V2.0 - 2024.09.14                %
+% Version: V2.1 - 2025.07.18                %
 % Compatible ADTM Release: ADTM_1.4         %
 % Author: Simon Frank simon.sf.frank@tum.de %
 % Modified by:                              %
@@ -14,6 +14,11 @@ veh = struct();
 
 %% Vehicle selection UI
 listing = dir('.\vehicles');
+
+if isempty(listing)
+    error('No vehicles found.');
+end
+
 tbl = struct2table(listing);
 fileNames = tbl.name(~tbl.isdir,:);
 userSelIdx = listdlg('Name','Select a vehicle file (.m)', ...
